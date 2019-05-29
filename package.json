@@ -1,0 +1,25 @@
+{
+  "name": "randompassbot",
+  "version": "1.0.0",
+  "description": "randompassbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Khuzha/randompassbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Khuzha/randompassbot/issues"
+  },
+  "homepage": "https://github.com/Khuzha/randompassbot#readme",
+  "dependencies": {
+    "nodemon": "^1.19.1",
+    "randomstring": "^1.1.5",
+    "telegraf": "^3.29.0"
+  }
+}
