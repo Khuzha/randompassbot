@@ -9,6 +9,7 @@ const session = require('telegraf/session')
 bot.use(session())
 
 bot.on('message', (ctx) => {
+  console.log(1)
   ctx.session.options = data.defaultOptions
 
   let options = ctx.session.options
@@ -16,6 +17,16 @@ bot.on('message', (ctx) => {
     `Select options and tap "Generate". \n\nPresent options: \nLength: ${options.length}, \nSybmols: ${options.charset}, \nCase: ${options.casecapitalization}`, 
     data.markup
   )
+
+  for (let i = ctx.message.message_id; i > ctx.message.message_id - 10; i--) {
+    bot.telegram.deleteMessage(ctx.chat.id, i)
+      .catch((err) => {
+        if (err.code == 400) {
+          return
+        }
+        sendError(ctx, err)
+      })
+  }
 })
 
 bot.action(/setLength=[0-9]/, (ctx) => {
@@ -93,5 +104,11 @@ bot.action(/generate=*/, (ctx) => {
   options.charset == data.anyCharsString ? options.charset = 'any' : false
   options.capitalization == null ? options.capitalization = 'any' : false
 })
+
+
+function sendError (err, ctx) {
+  bot.telegram.sendMessage(data.dev, `Ошибка у [${ctx.from.first_name}](tg://user?id=${ctx.from.id}) \n\nОшибка: ${err}`)
+}
+
 
 bot.startPolling()
