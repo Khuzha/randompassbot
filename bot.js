@@ -129,7 +129,8 @@ bot.command('users', async (ctx) => {
   )
 })
 
-bot.on('message', (ctx) => {
+bot.on('message', async (ctx) => {
+  console.log(1)
   ctx.session.options = data.defaultOptions
 
   let options = ctx.session.options
@@ -138,14 +139,22 @@ bot.on('message', (ctx) => {
     data.markup
   )
 
-  for (let i = ctx.message.message_id; i > ctx.message.message_id - 15; i--) {
-    bot.telegram.deleteMessage(ctx.chat.id, i)
-      .catch((err) => {
-        if (err.code == 400) {
-          return
-        }
-        sendError(err, ctx)
-      })
+  let i = ctx.message.message_id
+  let counter = 0
+  let stopper = 0
+
+  while (counter < 10) {
+    try {
+      if (stopper > 5) {
+        break
+      }
+      let res = await bot.telegram.deleteMessage(ctx.chat.id, i)
+      i--
+      res ? counter++ : stopper++
+    } catch (err) {
+      i--
+      stopper++
+    }
   }
 
   updateUser(ctx)
