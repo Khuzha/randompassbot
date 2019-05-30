@@ -1,6 +1,7 @@
 module.exports = {
   token: 'string', // token from @BotFather
   dev: 123456789, // developer`s id for sending him/her errors
+  mongoLink: 'key', // mongo-link from cloud.mongodb.com
 
   anyCharsString: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+=-"/\\`~><?^,.',
 
