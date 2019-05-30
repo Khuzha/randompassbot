@@ -9,7 +9,6 @@ const session = require('telegraf/session')
 bot.use(session())
 
 bot.on('message', (ctx) => {
-  console.log(1)
   ctx.session.options = data.defaultOptions
 
   let options = ctx.session.options
@@ -18,13 +17,13 @@ bot.on('message', (ctx) => {
     data.markup
   )
 
-  for (let i = ctx.message.message_id; i > ctx.message.message_id - 10; i--) {
+  for (let i = ctx.message.message_id; i > ctx.message.message_id - 15; i--) {
     bot.telegram.deleteMessage(ctx.chat.id, i)
       .catch((err) => {
         if (err.code == 400) {
           return
         }
-        sendError(ctx, err)
+        sendError(err, ctx)
       })
   }
 })
@@ -45,7 +44,7 @@ bot.action(/setLength=[0-9]/, (ctx) => {
     `Select options and tap "Generate". \n\nPresent options: \nLength: ${options.length}, \nSybmols: ${options.charset}, \nCase: ${options.capitalization}`, 
     data.markup
   )
-    .catch((err) => console.log(err))
+    .catch((err) => sendError(err, ctx))
 })
 
 bot.action(/setType=*/, (ctx) => {
@@ -63,7 +62,7 @@ bot.action(/setType=*/, (ctx) => {
     `Select options and tap "Generate". \n\nPresent options: \nLength: ${options.length}, \nSybmols: ${options.charset}, \nCase: ${options.capitalization}`, 
     data.markup
   )
-    .catch((err) => console.log(err))
+    .catch((err) => sendError(err, ctx))
 })
 
 bot.action(/setCase=*/, (ctx) => {
@@ -81,7 +80,7 @@ bot.action(/setCase=*/, (ctx) => {
     `Select options and tap "Generate". \n\nPresent options: \nLength: ${options.length}, \nSybmols: ${options.charset}, \nCase: ${options.capitalization}`, 
     data.markup
   )
-    .catch((err) => console.log(err))
+    .catch((err) => sendError(err, ctx))
 })
 
 bot.action(/generate=*/, (ctx) => {
@@ -107,6 +106,10 @@ bot.action(/generate=*/, (ctx) => {
 
 
 function sendError (err, ctx) {
+  // console.log(err.toString())
+  if (err.toString().includes('message is not modified')) {
+    return
+  }
   bot.telegram.sendMessage(data.dev, `Ошибка у [${ctx.from.first_name}](tg://user?id=${ctx.from.id}) \n\nОшибка: ${err}`)
 }
 
